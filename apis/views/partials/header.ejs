@@ -1,0 +1,47 @@
+<header class="header">
+    <div class="container">
+        <div class="header-content">
+            <div class="logo">
+                <a href="/">
+                    <i class="fas fa-shopping-bag"></i>
+                    <span>ShopEasy</span>
+                </a>
+            </div>
+            
+            <div class="header-right">
+                <% if (user) { %>
+                <div class="user-menu">
+                    <div class="user-info">
+                        <i class="fas fa-user-circle"></i>
+                        <span><%= user.name %></span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="dropdown-menu">
+                        <a href="/profile" class="dropdown-item">
+                            <i class="fas fa-user"></i> Profile
+                        </a>
+                        <a href="/orders" class="dropdown-item">
+                            <i class="fas fa-shopping-bag"></i> Orders
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="/logout" class="dropdown-item">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </div>
+                </div>
+                
+                <a href="/cart" class="cart-btn">
+                    <i class="fas fa-shopping-cart"></i>
+                    <% if (cart && cart.length > 0) { %>
+                    <span class="cart-count"><%= cart.length %></span>
+                    <% } %>
+                </a>
+                <% } else { %>
+                <a href="/auth" class="auth-btn">
+                    <i class="fas fa-sign-in-alt"></i> Login
+                </a>
+                <% } %>
+            </div>
+        </div>
+    </div>
+</header>

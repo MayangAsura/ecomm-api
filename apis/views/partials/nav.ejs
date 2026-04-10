@@ -1,0 +1,24 @@
+<nav class="navbar">
+    <div class="container">
+        <ul class="nav-menu">
+            <li><a href="/" class="nav-link <%= currentPage === 'home' ? 'active' : '' %>">
+                <i class="fas fa-home"></i> Home
+            </a></li>
+            <li><a href="/products" class="nav-link <%= currentPage === 'products' ? 'active' : '' %>">
+                <i class="fas fa-store"></i> Products
+            </a></li>
+            <li><a href="/categories" class="nav-link">
+                <i class="fas fa-th-large"></i> Categories
+            </a></li>
+            <li><a href="/deals" class="nav-link">
+                <i class="fas fa-tag"></i> Deals
+            </a></li>
+            <li><a href="/about" class="nav-link">
+                <i class="fas fa-info-circle"></i> About
+            </a></li>
+            <li><a href="/contact" class="nav-link">
+                <i class="fas fa-phone-alt"></i> Contact
+            </a></li>
+        </ul>
+    </div>
+</nav>

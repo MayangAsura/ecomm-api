@@ -1,0 +1,288 @@
+<%- include('../layouts/main') %>
+
+<% content_for('body') %>
+<div class="products-page">
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="container">
+            <h1>Our Products</h1>
+            <p>Discover amazing products at great prices</p>
+        </div>
+    </div>
+
+    <!-- Filters Section -->
+    <div class="filters-section">
+        <div class="container">
+            <div class="filters-grid">
+                <!-- Search -->
+                <div class="search-box">
+                    <form action="/products" method="GET" class="search-form">
+                        <input 
+                            type="text" 
+                            name="search" 
+                            placeholder="Search products..."
+                            value="<%= currentSearch %>"
+                            class="search-input"
+                        >
+                        <button type="submit" class="search-btn">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Category Filter -->
+                <div class="category-filter">
+                    <form action="/products" method="GET" class="filter-form">
+                        <input type="hidden" name="search" value="<%= currentSearch %>">
+                        <input type="hidden" name="sort" value="<%= currentSort %>">
+                        <select name="category" class="category-select" onchange="this.form.submit()">
+                            <% categories.forEach(category => { %>
+                            <option value="<%= category %>" <%= currentCategory === category ? 'selected' : '' %>>
+                                <%= category === 'all' ? 'All Categories' : category.charAt(0).toUpperCase() + category.slice(1) %>
+                            </option>
+                            <% }) %>
+                        </select>
+                    </form>
+                </div>
+
+                <!-- Sort Filter -->
+                <div class="sort-filter">
+                    <form action="/products" method="GET" class="filter-form">
+                        <input type="hidden" name="search" value="<%= currentSearch %>">
+                        <input type="hidden" name="category" value="<%= currentCategory %>">
+                        <select name="sort" class="sort-select" onchange="this.form.submit()">
+                            <option value="featured" <%= currentSort === 'featured' ? 'selected' : '' %>>Featured</option>
+                            <option value="price-low" <%= currentSort === 'price-low' ? 'selected' : '' %>>Price: Low to High</option>
+                            <option value="price-high" <%= currentSort === 'price-high' ? 'selected' : '' %>>Price: High to Low</option>
+                            <option value="rating" <%= currentSort === 'rating' ? 'selected' : '' %>>Highest Rated</option>
+                            <option value="newest" <%= currentSort === 'newest' ? 'selected' : '' %>>Newest</option>
+                        </select>
+                    </form>
+                </div>
+
+                <!-- View Toggle -->
+                <div class="view-toggle">
+                    <button class="view-btn active" data-view="grid">
+                        <i class="fas fa-th-large"></i>
+                    </button>
+                    <button class="view-btn" data-view="list">
+                        <i class="fas fa-list"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Products Grid -->
+    <div class="products-section">
+        <div class="container">
+            <% if (products.length === 0) { %>
+            <div class="no-products">
+                <i class="fas fa-search fa-3x"></i>
+                <h2>No products found</h2>
+                <p>Try adjusting your search or filter criteria</p>
+                <a href="/products" class="btn btn-outline">Clear Filters</a>
+            </div>
+            <% } else { %>
+            <div class="products-grid" id="products-view">
+                <% products.forEach(product => { %>
+                <div class="product-card">
+                    <!-- Product Image -->
+                    <div class="product-image">
+                        <a href="/products/<%= product.id %>">
+                            <img src="<%= product.image %>" alt="<%= product.name %>">
+                        </a>
+                        
+                        <!-- Tags -->
+                        <% product.tags.forEach(tag => { %>
+                        <span class="product-tag tag-<%= tag %>"><%= tag %></span>
+                        <% }) %>
+                        
+                        <!-- Discount Badge -->
+                        <% if (product.discount) { %>
+                        <span class="discount-badge">-<%= product.discount %>%</span>
+                        <% } %>
+                        
+                        <!-- Out of Stock -->
+                        <% if (!product.inStock) { %>
+                        <div class="out-of-stock">Out of Stock</div>
+                        <% } %>
+                        
+                        <!-- Quick Actions -->
+                        <div class="quick-actions">
+                            <button class="action-btn wishlist-btn" data-product="<%= product.id %>">
+                                <i class="fas fa-heart"></i>
+                            </button>
+                            <button class="action-btn quick-view-btn" data-product="<%= product.id %>">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Product Info -->
+                    <div class="product-info">
+                        <h3 class="product-title">
+                            <a href="/products/<%= product.id %>"><%= product.name %></a>
+                        </h3>
+                        
+                        <p class="product-description"><%= product.description %></p>
+                        
+                        <!-- Rating -->
+                        <div class="product-rating">
+                            <div class="stars">
+                                <% for (let i = 1; i <= 5; i++) { %>
+                                <i class="fas fa-star <%= i <= Math.floor(product.rating) ? 'filled' : '' %>"></i>
+                                <% } %>
+                            </div>
+                            <span class="rating-count">(<%= product.reviews %>)</span>
+                        </div>
+                        
+                        <!-- Price -->
+                        <div class="product-price">
+                            <span class="current-price">$<%= product.price.toFixed(2) %></span>
+                            <% if (product.originalPrice) { %>
+                            <span class="original-price">$<%= product.originalPrice.toFixed(2) %></span>
+                            <% } %>
+                        </div>
+                        
+                        <!-- Add to Cart -->
+                        <form action="/cart/add" method="POST" class="add-to-cart-form">
+                            <input type="hidden" name="productId" value="<%= product.id %>">
+                            <input type="hidden" name="quantity" value="1">
+                            <button 
+                                type="submit" 
+                                class="btn btn-add-to-cart <%= !product.inStock ? 'disabled' : '' %>"
+                                <%= !product.inStock ? 'disabled' : '' %>
+                            >
+                                <i class="fas fa-shopping-cart"></i>
+                                <%= product.inStock ? 'Add to Cart' : 'Out of Stock' %>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                <% }) %>
+            </div>
+            <% } %>
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <div class="features-section">
+        <div class="container">
+            <div class="features-grid">
+                <div class="feature">
+                    <i class="fas fa-shipping-fast"></i>
+                    <h3>Free Shipping</h3>
+                    <p>On orders over $100</p>
+                </div>
+                <div class="feature">
+                    <i class="fas fa-undo-alt"></i>
+                    <h3>30-Day Returns</h3>
+                    <p>Easy return policy</p>
+                </div>
+                <div class="feature">
+                    <i class="fas fa-shield-alt"></i>
+                    <h3>Secure Payment</h3>
+                    <p>100% secure transactions</p>
+                </div>
+                <div class="feature">
+                    <i class="fas fa-headset"></i>
+                    <h3>24/7 Support</h3>
+                    <p>Dedicated customer service</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // View toggle
+    document.querySelectorAll('.view-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const view = btn.getAttribute('data-view');
+            
+            // Update active button
+            document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            
+            // Update grid/list view
+            const productsView = document.getElementById('products-view');
+            productsView.className = view === 'grid' ? 'products-grid' : 'products-list';
+        });
+    });
+
+    // Add to cart form submission
+    document.querySelectorAll('.add-to-cart-form').forEach(form => {
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(form);
+            const productId = formData.get('productId');
+            const quantity = formData.get('quantity');
+            
+            try {
+                const response = await fetch('/cart/add', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ productId, quantity })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    // Update cart count in header
+                    const cartCount = document.querySelector('.cart-count');
+                    if (cartCount) {
+                        cartCount.textContent = result.cartCount;
+                    } else {
+                        // Create cart count if it doesn't exist
+                        const cartBtn = document.querySelector('.cart-btn');
+                        if (cartBtn) {
+                            const countSpan = document.createElement('span');
+                            countSpan.className = 'cart-count';
+                            countSpan.textContent = result.cartCount;
+                            cartBtn.appendChild(countSpan);
+                        }
+                    }
+                    
+                    // Show success message
+                    alert('Product added to cart!');
+                }
+            } catch (error) {
+                console.error('Error adding to cart:', error);
+                alert('Failed to add product to cart. Please try again.');
+            }
+        });
+    });
+
+    // Wishlist button
+    document.querySelectorAll('.wishlist-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const productId = btn.getAttribute('data-product');
+            btn.classList.toggle('active');
+            
+            // Toggle heart icon
+            const icon = btn.querySelector('i');
+            if (btn.classList.contains('active')) {
+                icon.className = 'fas fa-heart';
+                // Add to wishlist logic here
+                console.log('Added to wishlist:', productId);
+            } else {
+                icon.className = 'far fa-heart';
+                // Remove from wishlist logic here
+                console.log('Removed from wishlist:', productId);
+            }
+        });
+    });
+
+    // Quick view
+    document.querySelectorAll('.quick-view-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const productId = btn.getAttribute('data-product');
+            // Implement quick view modal
+            console.log('Quick view product:', productId);
+        });
+    });
+</script>

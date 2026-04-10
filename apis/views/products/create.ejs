@@ -1,0 +1,528 @@
+<%- include('../layouts/main') %>
+
+<% content_for('body') %>
+<div class="page-header">
+    <div class="container">
+        <h1><i class="fas fa-plus-circle"></i> Add New Product</h1>
+        <p>Create a new product with custom colors</p>
+    </div>
+</div>
+
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <h2>Product Details</h2>
+            <p>Fill in all required fields marked with *</p>
+        </div>
+        
+        <form action="/products" method="POST" enctype="multipart/form-data" class="product-form">
+            <div class="form-grid">
+                <!-- Basic Information -->
+                <div class="form-section">
+                    <h3 class="section-title">
+                        <i class="fas fa-info-circle"></i> Basic Information
+                    </h3>
+                    
+                    <div class="form-group">
+                        <label for="name" class="form-label">
+                            Product Name *
+                            <span class="form-hint">Enter a descriptive name for your product</span>
+                        </label>
+                        <input 
+                            type="text" 
+                            id="name" 
+                            name="name" 
+                            class="form-control" 
+                            placeholder="e.g., Premium Wireless Headphones"
+                            required
+                            autofocus
+                        >
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="description" class="form-label">
+                            Description
+                            <span class="form-hint">Detailed description of the product</span>
+                        </label>
+                        <textarea 
+                            id="description" 
+                            name="description" 
+                            class="form-control" 
+                            rows="4"
+                            placeholder="Describe your product features, benefits, and specifications..."
+                        ></textarea>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="category" class="form-label">Category *</label>
+                            <select id="category" name="category" class="form-select" required>
+                                <option value="">Select a category</option>
+                                <% categories.forEach(category => { %>
+                                <option value="<%= category %>"><%= category %></option>
+                                <% }) %>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="tags" class="form-label">Tags</label>
+                            <input 
+                                type="text" 
+                                id="tags" 
+                                name="tags" 
+                                class="form-control" 
+                                placeholder="wireless, premium, audio"
+                            >
+                            <small class="form-text">Separate tags with commas</small>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Pricing -->
+                <div class="form-section">
+                    <h3 class="section-title">
+                        <i class="fas fa-tag"></i> Pricing Information
+                    </h3>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="price" class="form-label">
+                                Price *
+                                <span class="form-hint">Current selling price</span>
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-text">$</span>
+                                <input 
+                                    type="number" 
+                                    id="price" 
+                                    name="price" 
+                                    class="form-control" 
+                                    step="0.01"
+                                    min="0"
+                                    placeholder="0.00"
+                                    required
+                                >
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="originalPrice" class="form-label">Original Price</label>
+                            <div class="input-group">
+                                <span class="input-group-text">$</span>
+                                <input 
+                                    type="number" 
+                                    id="originalPrice" 
+                                    name="originalPrice" 
+                                    class="form-control" 
+                                    step="0.01"
+                                    min="0"
+                                    placeholder="0.00"
+                                >
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="discount" class="form-label">
+                            Discount Percentage
+                            <span class="form-hint">Enter 0 for no discount</span>
+                        </label>
+                        <div class="input-group">
+                            <input 
+                                type="range" 
+                                id="discountRange" 
+                                min="0" 
+                                max="100" 
+                                step="1"
+                                value="0"
+                                class="form-range"
+                            >
+                            <div class="input-group">
+                                <input 
+                                    type="number" 
+                                    id="discount" 
+                                    name="discount" 
+                                    class="form-control" 
+                                    min="0" 
+                                    max="100"
+                                    value="0"
+                                    placeholder="0"
+                                >
+                                <span class="input-group-text">%</span>
+                            </div>
+                        </div>
+                        <div class="discount-preview">
+                            <span id="discountPreview">No discount applied</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Colors -->
+                <div class="form-section">
+                    <h3 class="section-title">
+                        <i class="fas fa-palette"></i> Color Customization
+                    </h3>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Color Presets</label>
+                        <div class="color-presets">
+                            <% colorPresets.forEach(preset => { %>
+                            <!-- <div class="color-preset" data-bg="<%= preset.bg %>" data-panel="<%= preset.panel %>">
+                                <div class="color-box" style="background: <%= preset.bg %>"></div>
+                                <div class="color-panel" style="background: <%= preset.panel %>"></div>
+                                <span class="color-name"><%= preset.name %></span> -->
+                            </div>
+                            <% }) %>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="bgColor" class="form-label">
+                                Background Color
+                                <span class="form-hint">Main background color</span>
+                            </label>
+                            <div class="color-input">
+                                <input 
+                                    type="color" 
+                                    id="bgColorPicker" 
+                                    value="#ffffff"
+                                    class="color-picker"
+                                >
+                                <input 
+                                    type="text" 
+                                    id="bgColor" 
+                                    name="bgColor" 
+                                    class="form-control color-hex" 
+                                    value="#ffffff"
+                                    placeholder="#ffffff"
+                                >
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="panelColor" class="form-label">
+                                Panel Color
+                                <span class="form-hint">Secondary/panel color</span>
+                            </label>
+                            <div class="color-input">
+                                <input 
+                                    type="color" 
+                                    id="panelColorPicker" 
+                                    value="#f5f5f5"
+                                    class="color-picker"
+                                >
+                                <input 
+                                    type="text" 
+                                    id="panelColor" 
+                                    name="panelColor" 
+                                    class="form-control color-hex" 
+                                    value="#f5f5f5"
+                                    placeholder="#f5f5f5"
+                                >
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="color-preview">
+                        <div class="preview-header">
+                            <h4>Color Preview</h4>
+                            <button type="button" id="swapColors" class="btn btn-sm btn-outline">
+                                <i class="fas fa-exchange-alt"></i> Swap Colors
+                            </button>
+                        </div>
+                        <div id="colorPreview" class="color-preview-box">
+                            <div class="preview-bg" style="background: #ffffff;"></div>
+                            <div class="preview-panel" style="background: #f5f5f5;"></div>
+                            <div class="preview-content">
+                                <h5>Sample Product Card</h5>
+                                <p>This is how your product will look with the selected colors</p>
+                                <div class="preview-price">$0.00</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Image Upload -->
+                <div class="form-section">
+                    <h3 class="section-title">
+                        <i class="fas fa-image"></i> Product Image
+                    </h3>
+                    
+                    <div class="form-group">
+                        <label for="image" class="form-label">
+                            Product Image *
+                            <span class="form-hint">Upload a high-quality product image</span>
+                        </label>
+                        
+                        <div class="image-upload-area" id="imageUploadArea">
+                            <div class="upload-placeholder">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <h4>Drop your image here</h4>
+                                <p>or click to browse</p>
+                                <small>Supports: JPG, PNG, GIF, WebP (Max 5MB)</small>
+                            </div>
+                            <input 
+                                type="file" 
+                                id="image" 
+                                name="image" 
+                                class="image-input" 
+                                accept="image/*"
+                                required
+                            >
+                        </div>
+                        
+                        <div class="image-preview" id="imagePreview">
+                            <div class="preview-container">
+                                <img id="previewImage" src="" alt="Preview">
+                                <button type="button" class="remove-image" id="removeImage">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Image Guidelines</label>
+                        <ul class="guidelines">
+                            <li><i class="fas fa-check-circle"></i> Use high-resolution images (min 800x800px)</li>
+                            <li><i class="fas fa-check-circle"></i> White background is recommended</li>
+                            <li><i class="fas fa-check-circle"></i> Show product from multiple angles</li>
+                            <li><i class="fas fa-check-circle"></i> File size should not exceed 5MB</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-actions">
+                <button type="button" class="btn btn-outline" onclick="window.history.back()">
+                    <i class="fas fa-times"></i> Cancel
+                </button>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save"></i> Create Product
+                </button>
+                <button type="button" class="btn btn-secondary" id="previewBtn">
+                    <i class="fas fa-eye"></i> Preview
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    // Discount Range Syncing
+    const discountRange = document.getElementById('discountRange');
+    const discountInput = document.getElementById('discount');
+    const discountPreview = document.getElementById('discountPreview');
+    
+    function updateDiscount() {
+        const discount = parseInt(discountRange.value);
+        const price = parseFloat(document.getElementById('price').value) || 0;
+        const originalPrice = parseFloat(document.getElementById('originalPrice').value) || price;
+        
+        discountInput.value = discount;
+        
+        if (discount > 0 && price > 0) {
+            const discountedPrice = originalPrice * (1 - discount / 100);
+            discountPreview.textContent = `${discount}% off: $${originalPrice.toFixed(2)} → $${discountedPrice.toFixed(2)}`;
+            discountPreview.className = 'discount-active';
+        } else {
+            discountPreview.textContent = 'No discount applied';
+            discountPreview.className = '';
+        }
+    }
+    
+    discountRange.addEventListener('input', updateDiscount);
+    discountInput.addEventListener('input', function() {
+        discountRange.value = this.value;
+        updateDiscount();
+    });
+    
+    // Color Management
+    const bgColorPicker = document.getElementById('bgColorPicker');
+    const bgColorInput = document.getElementById('bgColor');
+    const panelColorPicker = document.getElementById('panelColorPicker');
+    const panelColorInput = document.getElementById('panelColor');
+    const colorPreview = document.getElementById('colorPreview');
+    const previewBg = colorPreview.querySelector('.preview-bg');
+    const previewPanel = colorPreview.querySelector('.preview-panel');
+    
+    function updateColors() {
+        const bgColor = bgColorInput.value;
+        const panelColor = panelColorInput.value;
+        
+        bgColorPicker.value = bgColor;
+        panelColorPicker.value = panelColor;
+        
+        previewBg.style.background = bgColor;
+        previewPanel.style.background = panelColor;
+        
+        // Update preview text color for contrast
+        const bgLuminance = getLuminance(bgColor);
+        const textColor = bgLuminance > 0.5 ? '#000000' : '#ffffff';
+        previewBg.style.color = textColor;
+    }
+    
+    bgColorPicker.addEventListener('input', function() {
+        bgColorInput.value = this.value;
+        updateColors();
+    });
+    
+    bgColorInput.addEventListener('input', updateColors);
+    
+    panelColorPicker.addEventListener('input', function() {
+        panelColorInput.value = this.value;
+        updateColors();
+    });
+    
+    panelColorInput.addEventListener('input', updateColors);
+    
+    // Color presets
+    document.querySelectorAll('.color-preset').forEach(preset => {
+        preset.addEventListener('click', function() {
+            const bg = this.dataset.bg;
+            const panel = this.dataset.panel;
+            
+            bgColorInput.value = bg;
+            panelColorInput.value = panel;
+            updateColors();
+        });
+    });
+    
+    // Swap colors
+    document.getElementById('swapColors').addEventListener('click', function() {
+        const temp = bgColorInput.value;
+        bgColorInput.value = panelColorInput.value;
+        panelColorInput.value = temp;
+        updateColors();
+    });
+    
+    // Image Upload Preview
+    const imageInput = document.getElementById('image');
+    const imagePreview = document.getElementById('imagePreview');
+    const previewImage = document.getElementById('previewImage');
+    const removeImageBtn = document.getElementById('removeImage');
+    const uploadArea = document.getElementById('imageUploadArea');
+    
+    imageInput.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                previewImage.src = e.target.result;
+                imagePreview.style.display = 'block';
+            }
+            reader.readAsDataURL(file);
+        }
+    });
+    
+    removeImageBtn.addEventListener('click', function() {
+        imageInput.value = '';
+        previewImage.src = '';
+        imagePreview.style.display = 'none';
+    });
+    
+    // Drag and drop
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        uploadArea.addEventListener(eventName, preventDefaults, false);
+    });
+    
+    function preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+    
+    ['dragenter', 'dragover'].forEach(eventName => {
+        uploadArea.addEventListener(eventName, highlight, false);
+    });
+    
+    ['dragleave', 'drop'].forEach(eventName => {
+        uploadArea.addEventListener(eventName, unhighlight, false);
+    });
+    
+    function highlight() {
+        uploadArea.classList.add('highlight');
+    }
+    
+    function unhighlight() {
+        uploadArea.classList.remove('highlight');
+    }
+    
+    uploadArea.addEventListener('drop', function(e) {
+        const dt = e.dataTransfer;
+        const files = dt.files;
+        imageInput.files = files;
+        
+        if (files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                previewImage.src = e.target.result;
+                imagePreview.style.display = 'block';
+            }
+            reader.readAsDataURL(files[0]);
+        }
+    });
+    
+    // Helper function for luminance calculation
+    function getLuminance(hex) {
+        const rgb = parseInt(hex.substring(1), 16);
+        const r = (rgb >> 16) & 0xff;
+        const g = (rgb >> 8) & 0xff;
+        const b = (rgb >> 0) & 0xff;
+        return (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+    }
+    
+    // Form validation
+    document.querySelector('.product-form').addEventListener('submit', function(e) {
+        const name = document.getElementById('name').value.trim();
+        const price = document.getElementById('price').value;
+        const image = document.getElementById('image').files[0];
+        
+        if (!name) {
+            e.preventDefault();
+            toastr.error('Product name is required');
+            return false;
+        }
+        
+        if (!price || parseFloat(price) <= 0) {
+            e.preventDefault();
+            toastr.error('Valid price is required');
+            return false;
+        }
+        
+        if (!image) {
+            e.preventDefault();
+            toastr.error('Product image is required');
+            return false;
+        }
+    });
+    
+    // Preview button
+    document.getElementById('previewBtn').addEventListener('click', function() {
+        const name = document.getElementById('name').value || 'Sample Product';
+        const price = document.getElementById('price').value || '0.00';
+        const discount = document.getElementById('discount').value || '0';
+        const bgColor = document.getElementById('bgColor').value;
+        const panelColor = document.getElementById('panelColor').value;
+        
+        const previewData = {
+            name,
+            price: parseFloat(price).toFixed(2),
+            discount: parseInt(discount),
+            bgColor,
+            panelColor
+        };
+        
+        localStorage.setItem('productPreview', JSON.stringify(previewData));
+        window.open('/preview', '_blank');
+    });
+    
+    // Initialize
+    updateDiscount();
+    updateColors();
+    toastr.options = {
+        positionClass: 'toast-top-right',
+        progressBar: true,
+        timeOut: 3000
+    };
+</script>
