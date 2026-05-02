@@ -1,14 +1,18 @@
 const jwt = require('jsonwebtoken')
 
 const verifyToken = (req, res, next) => {
-  const token = req.cookie.token
+  const token = req.cookies.token
+
+  console.log('token', token, req)
 
   if(!token){
-    res.status(400).json({error: true, message: 'Token not found'})
+    return res.status(401).json({error: true, message: 'Token not found'})
   }
 
   jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
-    if(err) res.status(400).json({error: true, message: 'Token invalid'})
+    if(err) return res.status(400).json({error: true, message: 'Token invalid'})
+
+    console.log('user', user)
     req.user = user
 
     next()
@@ -17,7 +21,7 @@ const verifyToken = (req, res, next) => {
 
 const verifyUser = (req, res, next) => {
   verifyToken(req, res, next, () => {
-    if(req.user.id === req.param.id || req.user.is_admin){
+    if(req.user?.uni !== req.params?.uni || req.user.is_admin === true){
       next()
     }else{
       res.status(400).json({error: true, message: 'You are not authorized'})
@@ -27,7 +31,7 @@ const verifyUser = (req, res, next) => {
 
 const verifyAdmin = (req, res, next) => {
   verifyToken(req, res, next, () => {
-    if(req.user.is_admin){
+    if(req.user.user_type === 'admin'){
       next()
     }else{
       res.status(400).json({error: true, message: 'You are not admin'})

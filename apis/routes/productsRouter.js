@@ -5,15 +5,16 @@ const router = express.Router()
 const fs = require('fs');
 var path = require('path');
 // import { createProduct, getProducts } from '../controllers/productController.js';
-const {createProduct, getProducts, getProductsNewArrivals, getProductsBestSellers, getProductsSpecialOffers, updateProduct, deleteProduct} = require('../controllers/productController.js');
+const {createProduct, getProducts, getProductsNewArrivals, getProductsBestSellers, getProductsSpecialOffers, updateProduct, deleteProduct, getProductById} = require('../controllers/productController.js');
 
 const { verifyAdmin } = require('../utils/verifyToken.js')
 
 router.post('/', verifyAdmin, createProduct)
 router.get('/', getProducts)
 router.get('/new-arrivals', getProductsNewArrivals)
-router.get('/bestsellers', getProductsBestSellers)
-router.get('/specialoffers', getProductsSpecialOffers)
+router.get('/best-sellers', getProductsBestSellers)
+router.get('/special-offers', getProductsSpecialOffers)
+router.get('/:id', getProductById)
 
 router.patch('/:id', verifyAdmin, updateProduct)
 router.delete('/:id', verifyAdmin, deleteProduct)

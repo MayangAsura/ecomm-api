@@ -25,13 +25,21 @@ const ordersRouter = require('./routes/ordersRouter.js')
 const historyOrdersRouter = require('./routes/historyOrderRouter.js')
 const orderReportsRouter = require('./routes/orderReportRouter.js')
 const customersRouter = require('./routes/customersRouter.js')
+const searchRouter = require('./routes/customersRouter.js')
+const citiesRouter = require('./routes/citiesRouter.js')
 
 const db = require('./config/mongoose-connection')
 
-app.use(cors())
+// app.use(cors({
+//   credentials: true
+// }))
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 app.use(cookieParser())
+app.use(cors({
+  origin: ['http://localhost:3000', 'http://localhost:5173'],
+  credentials: true
+}))
 app.use(expressSession({
     resave: false,
     saveUninitialized: false,
@@ -454,14 +462,17 @@ app.use('/users', usersRouter)
 app.use('/products', productsRouter)
 app.use('/cart', cartsRouter)
 app.use('/payments', paymentsRouter)
-// app.use('/history-orders', historyOrdersRouter)
-// app.use('/auth', authRouter)
-// app.use('/admin/auth', authRouter)
-// app.use('/counts', countsRouter)
-// app.use('/orders', ordersRouter)
-// app.use('/profiles', customersRouter)
-// app.use('/categories', categoriesRouter)
-// app.use('/order-reports', orderReportsRouter)
+app.use('/auth', authRouter)
+app.use('/history-orders', historyOrdersRouter)
+app.use('/admin/auth', authRouter)
+app.use('/count', countsRouter)
+app.use('/orders', ordersRouter)
+app.use('/profile', customersRouter)
+app.use('/customers', customersRouter)
+app.use('/categories', categoriesRouter)
+app.use('/order-reports', orderReportsRouter)
+app.use('/search', searchRouter)
+app.use('/cities', citiesRouter)
 
 app.use((err, req, res, next) => {
     const errStatus = err.status || 500
