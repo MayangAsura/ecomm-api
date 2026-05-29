@@ -3,13 +3,14 @@ const pool = require('../config/postgres')
 const countProducts = async (req, res) => {
   try {
 
-    const {rows } = await pool.query('SELECT count(id) as count_products FROM customers WHERE created_at interval 1 week AND deleted_at is null')
+    const {rows } = await pool.query("SELECT count(id) as count_products FROM products WHERE created_at < now() - interval '1 week' AND deleted_at is null")
+    // const {rows } = await pool.query("SELECT count(id) as count_products FROM customers WHERE created_at interval '1 week' AND deleted_at is null")
 
     if(!rows){
       return res.status(400).json({error: true, message: 'Produk empty'})
     }
 
-    res.status(200).json({error: false, message: 'Successfully get count customers', data: rows[0].count_products})
+    res.status(200).json({error: false, message: 'Successfully get count products', data: rows[0].count_products})
 
 
   } catch (error) {
@@ -20,7 +21,7 @@ const countProducts = async (req, res) => {
 const countCustomers = async (req, res) => {
   try {
 
-    const {rows } = await pool.query('SELECT count(id) count_customers FROM customers WHERE created_at interval 1 week AND deleted_at is null')
+    const {rows } = await pool.query("SELECT count(id) count_customers FROM customers WHERE created_at < now() - interval '1 week' AND deleted_at is null")
 
     if(!rows){
       return res.status(400).json({error: true, message: 'Customers empty'})
@@ -37,7 +38,7 @@ const countCustomers = async (req, res) => {
 const countOrders = async (req, res) => {
   try {
 
-    const {rows } = await pool.query('SELECT count(id) count_orders FROM orders WHERE created_at interval 1 week AND deleted_at is null')
+    const {rows } = await pool.query("SELECT count(id) count_orders FROM orders WHERE created_at < now() - interval '1 week' AND deleted_at is null")
 
     if(!rows){
       return res.status(400).json({error: true, message: 'Orders empty'})
@@ -64,7 +65,7 @@ const countCompleteOrders = async (req, res) => {
       query.concat(' ')
     }
 
-    const {rows } = await pool.query('SELECT count(id) count_c_orders FROM customers WHERE created_at interval 1 week AND deleted_at is null')
+    const {rows } = await pool.query("SELECT count(id) count_c_orders FROM customers WHERE created_at < now() - interval '1 week' AND deleted_at is null")
 
     if(!rows){
       return res.status(400).json({error: true, message: 'Complete orders empty'})

@@ -1,6 +1,6 @@
 const express = require('express')
 const user = require('../models/user')
-const { getCart, addToCart } = require('../controllers/cartsController')
+const { getCart, addToCart, increaseQuantity, decreaseQuantity, removeCart, removeFromCart } = require('../controllers/cartsController')
 const { verifyUser } = require('../utils/verifyToken')
 
 
@@ -8,6 +8,10 @@ const router = express.Router()
 
 router.get('/', verifyUser, getCart)
 router.post('/add', verifyUser, addToCart)
+router.post('/remove', verifyUser, removeFromCart)
+router.delete('/reset', verifyUser, removeCart)
+router.post('/increase', verifyUser, increaseQuantity)
+router.post('/decrease', verifyUser, decreaseQuantity)
 
 // router.post('/add/:productId', async (req, res) => {
 //     // const user = await user.find({username: req.user.username})

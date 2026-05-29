@@ -90,12 +90,16 @@ const getSession = async (req, res) => {
     }
 }
 
+// const getRefreshToken = async (req, )
+
 const loginUser = async (req, res) => {
 
     const { username, password } = req.body
 
+    console.log('username', username)
+
     try {
-        const {rows} = await pool.query("SELECT email, uni, is_admin, password FROM users WHERE email = $1 AND deleted_at is null", [username])
+        const {rows} = await pool.query("SELECT full_name, email, uni, is_admin, password FROM users WHERE email = $1 AND deleted_at is null", [username])
         // const user = await userModel.findOne({email: email})
         console.log('rows', rows)
         if(!rows[0]){
@@ -103,23 +107,34 @@ const loginUser = async (req, res) => {
         }
 
         const credential = {
+            full_name: rows[0].full_name,
             email: rows[0].email,
             uni: rows[0].uni,
             is_admin: rows[0].is_admin
         }
 
-        bcrypt.compare(password, rows[0].password, (err, result) => {
-            if(result){
-                const token = generateToken(credential)
-                res.cookie('token', token, {
-                    httpOnly: true,
-                    secure: false
-                })
-                // {maxAge: 24 * 60}
-                res.status(200).json({error: false, message: 'Successfuly logged in', data: { token: token}})
-                // ('You are logged in')
-            }
+        const is_match = await bcrypt.compare(password, rows[0].password)
+        console.log('is_match', is_match)
+
+        if(!is_match){
+            return res.status(400).json({error: true, message: 'Username or password wrong.'})
+        }
+
+        const token = generateToken(credential)
+        res.cookie('token', token, {
+            httpOnly: true,
+            secure: true
         })
+        // {maxAge: 24 * 60}
+        const data = {
+            full_name: rows[0].full_name,
+            email: rows[0].email,
+            uni: rows[0].uni,
+            is_admin: rows[0].is_admin,
+            token: token
+        }
+        res.status(200).json({error: false, message: 'Successfuly logged in', data})
+
     } catch (error) {
         res.json({message: error.message})
     }
@@ -128,12 +143,20 @@ const loginUser = async (req, res) => {
 
 const logoutUser = async (req, res) => {
 
+    console.log('logout')
+
     // res.cookie('token', '', {maxAge: 0})
     // res.end()
-    res.clearCookie('token', {
-        httpOnly: true,
-        secure: false
-    }).json({error: false, message: 'Logout successfully'})
+    res.clearCookie('token').json({error: false, message: 'Logout successfully'})
+
+    // {
+    //     httpOnly: true,
+    //     secure: false
+    // }
+
+    req.user = null
+
+    // res.status(200).json({error: false, message: "Logout successfully"})
 
 }
 

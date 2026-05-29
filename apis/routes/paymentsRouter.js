@@ -1,6 +1,6 @@
 const express = require('express')
 const productModel = require('../models/product.js')
-const {createInvoice, createInvoiceMid} = require('../controllers/paymentController.js')
+const {createInvoice, createInvoiceMid, callbackMid} = require('../controllers/paymentController.js')
 const { verifyUser } = require('../utils/verifyToken.js')
 const upload = require('../config/multer-config.js')
 const router = express.Router()
@@ -8,6 +8,7 @@ const fs = require('fs');
 var path = require('path');
 
 router.post('/request-invoices', verifyUser, createInvoiceMid)
+router.post('/mid-callback', callbackMid)
 // router.post('/request-invoices', createInvoice)
 
 router.get('/', async (req, res) => {

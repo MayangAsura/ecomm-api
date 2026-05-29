@@ -58,6 +58,11 @@ const getCategories = async (req, res, next) => {
     );
 
     console.log(rows);
+    if(!rows){
+      return res.status(400).json({error: false, message: "Successfully get categories",
+        data: []})
+    }
+
     res
       .status(200)
       .json({
@@ -72,23 +77,23 @@ const getCategories = async (req, res, next) => {
 
 const getCategoryById = async (req, res, next) => {
   try {
-    const { id } = req.query;
+    const { id } = req.params
 
     const { rows } = await pool.query(
       `SELECT * FROM categories WHERE deleted_at is null AND id = $1`,
       [id],
     );
 
-    console.log(rows);
+    console.log('rows', rows, id)
     res
       .status(200)
-      .json({ error: false, message: "Successfully get order", data: rows[0] });
+      .json({ error: false, message: "Successfully get category", data: rows[0] })
   } catch (error) {
-    next(error);
+    next(error)
   }
 };
 
-const updateProduct = async (req, res, next) => {
+const updateCategory = async (req, res, next) => {
   try {
     const {
       name
@@ -96,7 +101,7 @@ const updateProduct = async (req, res, next) => {
     // const { image } = req.body
 
     const results = await pool.query(
-      `UPDATE products SET (name)
+      `UPDATE categories SET (name)
                             VALUES ( $1 )
       `,
       [
@@ -110,8 +115,8 @@ const updateProduct = async (req, res, next) => {
       .status(200)
       .json({
         error: false,
-        message: "Successfully insert product",
-        data: results[0],
+        message: "Successfully update category",
+        data: results.rows[0],
       });
   } catch (error) {
     next(error);
@@ -120,12 +125,12 @@ const updateProduct = async (req, res, next) => {
 
 const deleteCategory = async (req, res, next) => {
   try {
-    const { id } = req.query;
+    const { id } = req.params;
     // const { image, name, description, price, original_price, discount, bg_color, panel_color, text_color, stock, category, sku, colors } = req.body
     // const { image } = req.body
 
     const results = await pool.query(
-      `DELETE categories WHERE id = $1
+      `UPDATE categories SET deleted_at = null WHERE id = $1
       `,
       [id],
     );
@@ -140,4 +145,4 @@ const deleteCategory = async (req, res, next) => {
   }
 };
 
-module.exports = { createCategory, getCategories, updateProduct, deleteCategory };
+module.exports = { createCategory, getCategories, getCategoryById, updateCategory, deleteCategory };

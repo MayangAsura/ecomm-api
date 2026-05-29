@@ -3,6 +3,8 @@ const pool = require("../config/postgres")
 const getCities = async (req, res) => {
   try {
 
+    // console.log('uni', req.user.uni)
+
     const {rows} = await pool.query('SELECT * FROM cities WHERE deleted_at is null')
 
     if(!rows){

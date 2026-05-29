@@ -11,6 +11,10 @@ const cartModel = mongoose.Schema({
     trim: true,
     required: true
   }
-})
+  },
+  {
+    timestamp: true
+  }
+)
 
 module.exports = mongoose.model('Cart', cartModel)
