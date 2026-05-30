@@ -454,6 +454,10 @@ app.get('/auth', (req, res) => {
 //   }
 // });
 
+app.get('/', async (req, res) => {
+  res.send("Hello from ecomm API")
+})
+
 app.get('/test', async (req, res) => {
   const result = await pool.query("SELECT current_database()")
   res.send("database: " + result.rows[0].current_database)
