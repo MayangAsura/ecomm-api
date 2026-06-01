@@ -143,18 +143,30 @@ const decreaseQuantity = async (req, res, next) => {
     if(!product){
       return res.status(400).json({error: true, message: 'Product not found'})
     }
+    console.log('product', product, product.quantity === 1)
 
-    current_cart.carts[current_cart.carts.findIndex(item => item['_id'] = product._id)].quantity --
+    const carts = current_cart.carts.filter(product => product._id != product_id)
+    console.log('carts', carts)
+
+    const updated_cart = {}
+    if(product.quantity === 1){
+      // updated_cart = {...current_cart, }
+      updated_cart = current_cart.carts = []
+    }else{
+      updated_cart = current_cart.carts[current_cart.carts.findIndex(item => item._id = product._id)].quantity --
+    }
+
+    console.log('current_cart.carts', current_cart.carts)
 
     const cart = await Cart.findOneAndUpdate(
       {uni: uni},
-      {$set: current_cart},
+      {$set: updated_cart},
       {returnDocument: 'after'}
     )
     // await current_cart.save()
 
     if(cart){
-      res.status(200).json({error: false, message: 'One item added!.'})
+      res.status(200).json({error: false, message: 'One item updated!.'})
     }else{
       res.status(400).json({error: true, message: 'Error when decrease quantity'})
     }

@@ -167,7 +167,31 @@ const createInvoiceMid = async (req, res) => {
         console.log('AUTH_STRING', AUTH_STRING)
         // const AUTH_STRING = 'Basic ' + new Buffer(username + ":").toString('base64')
 
-        await axios.post(`${PG_API_URL}/transactions`, {transaction_details: {order_id: inv_number, gross_amount: total_price}}, {headers: {accept: 'application/json', 'content-type': 'application/json', Authorization: AUTH_STRING}})
+        const product_list = products.map(product => (
+                {
+                    "id": product._id,
+                    "price": product.price,
+                    "quantity": product.quantity,
+                    "name": product.name,
+                    "category": "muslimah fashion"
+                }
+            ))
+
+            console.log(product_list)
+
+        const transaction = {transaction_details: {
+            order_id: inv_number,
+            gross_amount: total_price,
+            "item_details": product_list,
+            "customer_details": {
+                "first_name": customer.full_name,
+                "last_name": "-",
+                "email": customer.email,
+                "phone": customer.phone_number
+            }
+        }}
+
+        await axios.post(`${PG_API_URL}/transactions`, transaction, {headers: {accept: 'application/json', 'content-type': 'application/json', Authorization: AUTH_STRING}})
                     .then(async result => {
                         console.log('result', result)
                         if(result.status == 201){
