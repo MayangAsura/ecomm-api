@@ -1,4 +1,4 @@
-const pool = require('../config/postgres.js')
+const {pool} = require('../config/postgres.js')
 const { idString } = require('../utils/generateSlug.js')
 
 const createProduct = async (req, res, next) => {

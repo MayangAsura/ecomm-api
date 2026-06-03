@@ -1,7 +1,7 @@
 // import userModel from '../models/user.js'
 // import { generateToken } from '../utils/generateToken.js'
 const bcrypt = require('bcrypt')
-const pool = require('../config/postgres.js')
+const {pool} = require('../config/postgres.js')
 const { generateToken } = require('../utils/generateToken.js')
 const { TokenExpiredError } = require('jsonwebtoken')
 
@@ -194,7 +194,7 @@ const resetPassword = async (req, res) => {
         }
 
         const salt = await getSalt(10)
-        
+
         const hash_password = await bcrypt.hash(password, salt)
 
         const {rows} = await pool.query(`UPDATE users SET password = $1, updated_at = $2 WHERE username = $3`, (hash_password, new Date().toDateString()))
