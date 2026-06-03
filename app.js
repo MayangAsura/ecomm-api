@@ -40,7 +40,7 @@ app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 app.use(cookieParser())
 app.use(cors({
-  origin: ['http://localhost:3000', 'http://localhost:3001', 'http://localhost:5173', 'https://7228-157-10-184-115.ngrok-free.app', 'http://localhost:5173', 'https://eshop-vini-sweethome.vercel.app', 'https://ecomm-api-eight.vercel.app', 'https://github.com/orgzpro-maryamalauzaiy/ecomm-api/blob/main/ca-cert-postgres-database/cert.pem'],
+  origin: ['http://localhost:3000', 'http://localhost:3001', 'http://localhost:5173', 'https://7228-157-10-184-115.ngrok-free.app', 'http://localhost:5173', 'https://eshop-vini-sweethome.vercel.app', 'https://github.com/orgzpro-maryamalauzaiy/ecomm-api/blob/main/ca-cert-postgres-database/cert.pem'],
   credentials: true
 }))
 app.use(expressSession({

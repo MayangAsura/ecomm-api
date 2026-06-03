@@ -1,4 +1,4 @@
-const pool = require('../config/postgres.js')
+const {pool} = require('../config/postgres.js')
 
 const createOrder = async (req, res, next) => {
 

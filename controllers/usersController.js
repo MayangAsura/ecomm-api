@@ -1,5 +1,5 @@
 const bcrypt = require('bcrypt')
-const pool = require('../config/postgres')
+const {pool} = require('../config/postgres')
 
 const updateProfile = async (req, res, next) => {
 

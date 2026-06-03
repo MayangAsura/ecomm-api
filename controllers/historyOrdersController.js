@@ -1,4 +1,4 @@
-const pool = require('../config/postgres')
+const {pool} = require('../config/postgres')
 
 const historyOrder = async (req, res) => {
   try {

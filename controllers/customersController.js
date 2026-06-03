@@ -1,4 +1,4 @@
-const pool = require('../config/postgres')
+const {pool} = require('../config/postgres')
 const bcrypt = require('bcrypt')
 
 const getCustomers = async (req, res) => {

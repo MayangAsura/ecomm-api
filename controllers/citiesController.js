@@ -1,4 +1,4 @@
-const pool = require("../config/postgres")
+const {pool} = require("../config/postgres")
 
 const getCities = async (req, res) => {
   try {

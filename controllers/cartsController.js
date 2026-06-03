@@ -1,6 +1,6 @@
 const Cart = require("../models/cart")
 const db = require('../config/mongoose-connection')
-const pool = require('../config/postgres')
+const {pool} = require('../config/postgres')
 
 const addToCart = async (req, res, next) => {
   try {

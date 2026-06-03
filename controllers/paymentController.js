@@ -1,4 +1,4 @@
-const pool = require('../config/postgres')
+const {pool} = require('../config/postgres')
 const axios = require('axios')
 const Cart = require('../models/cart')
 
