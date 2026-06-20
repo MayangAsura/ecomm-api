@@ -42,6 +42,10 @@ app.use(express.urlencoded({extended: true}))
 app.use(cookieParser())
 app.use(cors({
   origin: ['http://localhost:3000', 'http://localhost:3001', 'http://localhost:5173', 'http://localhost:5175', 'https://7228-157-10-184-115.ngrok-free.app', 'http://localhost:5173', 'https://eshop-vini-sweethome.vercel.app', 'https://github.com/orgzpro-maryamalauzaiy/ecomm-api/blob/main/ca-cert-postgres-database/cert.pem'],
+  // Allow these HTTP methods
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+  // Allow these headers in requests
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Request-ID', 'X-CSRF-Token', 'Accept', 'Accept-Version', 'Content-Length', 'Content-MD5', 'Date', 'X-Api-Version'],
   credentials: true
 }))
 app.use(expressSession({
