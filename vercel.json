@@ -13,13 +13,6 @@
         "methods": ["GET","POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
         "headers": {
             "source": "/(.*)",
-            "has": [
-                {
-                    "type": "header",
-                    "key": "Origin",
-                    "value": "https://eshop-vini-sweethome.vercel.app"
-                }
-            ],
             "headers": [
                 {
                     "key": "Access-Control-Allow-Origin",
