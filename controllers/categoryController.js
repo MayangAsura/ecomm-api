@@ -53,11 +53,40 @@ const createCategory = async (req, res, next) => {
 
 const getCategories = async (req, res, next) => {
   try {
+
+    console.log('query:', req.params)
+
+    const {pin} = req.query
+
+
+    var query = ""
+    var fields = []
+
+    if(Object.keys(req.query).length > 0){
+      Object.keys(req.query).forEach(element => {
+
+        query += `AND c1.${element} = $` + fields.length + 1
+        fields.push(req.query[element])
+
+      });
+    }
+
+    console.log('query', query)
+
     const { rows } = await pool.query(
-      `SELECT c1.id, c1.name, c1.parent_id, c2.name as parent_category_name FROM categories c1 LEFT JOIN categories c2 on c1.parent_id = c2.id WHERE c1.deleted_at is null`,
+      `SELECT c1.id, c1.name, c1.parent_id, c2.name as parent_category_name, c1.pin FROM categories c1 LEFT JOIN categories c2 on c1.parent_id = c2.id WHERE c1.deleted_at is null ${query}`,
+      fields
     );
 
-    console.log(rows);
+    // if(pin){
+    //   const {rows} = await pool.query(
+    //     // , [pin]
+    //   )
+
+    //   return res.status(200)
+    // }
+
+    console.log('categories', rows);
     if(!rows){
       return res.status(400).json({error: false, message: "Successfully get categories",
         data: []})

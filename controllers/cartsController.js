@@ -1,12 +1,23 @@
 const Cart = require("../models/cart")
 const db = require('../config/mongoose-connection')
 const {pool} = require('../config/postgres')
+const { generateRandomString } = require("../utils/generateRandomString")
 
 const addToCart = async (req, res, next) => {
   try {
 
-    const { product_id, quantity, price, variations } = req.body
-    const uni = req.user.uni
+    const { product_id, quantity, price, variations, cust_uni } = req.body
+
+    // let uni
+
+    // if(req.user?.uni){
+    //   uni = req.user.uni
+    // }else if(cust_uni) {
+    //   uni = cust_uni
+    // }else{
+    //   uni =
+    // }
+    const uni = req.user?.uni || cust_uni || generateRandomString(6)
 
     console.log('uni', uni)
 
@@ -59,6 +70,8 @@ const addToCart = async (req, res, next) => {
         quantity,
         variations
       }
+
+
       const new_cart = new Cart({
         uni: uni,
         carts: [product]
@@ -70,7 +83,7 @@ const addToCart = async (req, res, next) => {
 
     }
 
-    res.status(200).json({error: false, message: 'One item added!.'})
+    res.status(200).json({error: false, message: 'One item added!.', uni})
 
 
   } catch (error) {
@@ -181,7 +194,13 @@ const decreaseQuantity = async (req, res, next) => {
 
 const getCart = async (req, res, next) => {
   try {
-    const uni = req.user.uni
+    // console.log('body', req.body)
+    const uni = req.user? req.user.uni : req.headers.uni
+
+    // if(!req.user){
+
+    // }
+    console.log('uni', uni)
 
     const cart = await Cart.findOne({uni: uni})
 

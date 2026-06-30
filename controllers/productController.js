@@ -74,42 +74,60 @@ const getProducts = async (req, res, next) => {
 
   try {
 
-    const {color, category, min_price, max_price, type} = req.query
+    // const {color, category_id, min_price, max_price, type} = req.query
     // const min = range_price?.split(' - ')[0]
     // const max = range_price?.split(' - ')[1]
 
     let query = ''
     let fields = []
-    if(color){
-      query.concat(query + ' AND color = $' + fields.length + 1)
-      fields.push(color)
+
+    if(Object.keys(req.query).length > 0){
+
+      const {min_price, max_price, sort_by, ...filters} = req.query
+
+      Object.keys(filters).forEach(element => {
+        query += `AND ${element} = $${fields.length + 1}`
+        fields.push(req.query[element])
+      })
+
+      if(min_price){
+        query += ` AND price between $${fields.length + 1}`
+        // query.concat(query + ' AND price between $' + fields.length + 1)
+        fields.push(min_price)
+      }
+      if(max_price){
+        query += ` AND $${fields.length + 1}`
+        // query.concat(query + 'AND $' + fields.length + 1)
+        fields.push(max_price)
+      }
+      if(sort_by){
+        query += ` AND pin_product = $${fields.length + 1}`
+        // query.concat(query + 'AND $' + fields.length + 1)
+        fields.push(max_price)
+      }
     }
-    if(category){
-      query.concat(query + ' AND category_id = $' + fields.length + 1)
-      fields.push(category)
-    }
-    if(min_price){
-      query.concat(query + ' AND price between $' + fields.length + 1)
-      fields.push(min_price)
-    }
-    if(max_price){
-      query.concat(query + 'AND $' + fields.length + 1)
-      fields.push(max_price)
-    }
-    if(type){
-      query.concat(query + ' AND type = $' + fields.length + 1)
-      fields.push(type)
-    }
+    // if(color){
+    //   query.concat(query + ' AND color = $' + fields.length + 1)
+    //   fields.push(color)
+    // }
+    // if(category){
+    //   query.concat(query + ' AND category_id = $' + fields.length + 1)
+    //   fields.push(category)
+    // }
+    // if(type){
+    //   query.concat(query + ' AND type = $' + fields.length + 1)
+    //   fields.push(type)
+    // }
     // if(color){
     //   where.concat(where + ' AND color = $1')
     // }
 
-    console.log(query, type, fields)
+    // console.log(query, type, fields)
 
-    if(color || category || min_price || max_price || type){
+    // if(){
 
       // products = await pool.query(`SELECT * FROM products WHERE deleted_at is null `, [color || null, category || null, range_price && range_price.split(' - ')[0] || null, range_price && range_price.split(' - ')[1] || null, type || null])
-      const {rows} = await pool.query(`SELECT p.*, c.name as category_name FROM products p LEFT JOIN categories c ON c.id = p.category_id WHERE p.deleted_at is null AND c.deleted_at is null ${query} ORDER BY created_at desc`, [fields])
+      const {rows} = await pool.query(`SELECT p.*, c.name as category_name FROM products p LEFT JOIN categories c ON c.id = p.category_id WHERE p.deleted_at is null AND c.deleted_at is null ${query} ORDER BY created_at desc`, fields)
 
       console.log('rows', rows)
 
@@ -132,32 +150,32 @@ const getProducts = async (req, res, next) => {
 
 
       }
-    }else{
-      const {rows} = await pool.query(`SELECT p.*, c.name as category_name FROM products p LEFT JOIN categories c ON c.id = p.category_id WHERE p.deleted_at is null AND c.deleted_at is null `)
+    // }else{
+    //   const {rows} = await pool.query(`SELECT p.*, c.name as category_name FROM products p LEFT JOIN categories c ON c.id = p.category_id WHERE p.deleted_at is null AND c.deleted_at is null `)
 
-      console.log('rows', rows)
+    //   console.log('rows', rows)
 
-      if(rows){
-        Promise.all(rows.map(async product => {
-          const variations = await pool.query(`SELECT * FROM product_variations WHERE product_id = $1 AND deleted_at is null`, [product.id])
+    //   if(rows){
+    //     Promise.all(rows.map(async product => {
+    //       const variations = await pool.query(`SELECT * FROM product_variations WHERE product_id = $1 AND deleted_at is null`, [product.id])
 
-          return ({
-            ...product, variations: variations.rows || []
-          })
-        }))
-        .then(results => {
-          console.log('results', results)
-          // console.log('products', products)
+    //       return ({
+    //         ...product, variations: variations.rows || []
+    //       })
+    //     }))
+    //     .then(results => {
+    //       console.log('results', results)
+    //       // console.log('products', products)
 
-          res.status(200).json({error: false, message: 'Successfully get product', data: results})
+    //       res.status(200).json({error: false, message: 'Successfully get product', data: results})
 
-        })
-        .catch(error => {
-          next(error)
-        })
-      }
+    //     })
+    //     .catch(error => {
+    //       next(error)
+    //     })
+    //   }
 
-    }
+    // }
 
 
   } catch (error) {

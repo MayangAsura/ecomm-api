@@ -6,8 +6,8 @@ const { verifyUser } = require('../utils/verifyToken')
 
 const router = express.Router()
 
-router.get('/', verifyUser, getCart)
-router.post('/add', verifyUser, addToCart)
+router.get('/', getCart)
+router.post('/add', addToCart)
 router.post('/remove', verifyUser, removeFromCart)
 router.delete('/reset', verifyUser, removeCart)
 router.post('/increase', verifyUser, increaseQuantity)

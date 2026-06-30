@@ -7,7 +7,7 @@ const router = express.Router()
 const fs = require('fs');
 var path = require('path');
 
-router.post('/request-invoices', verifyUser, createInvoiceMid)
+router.post('/request-invoices', createInvoiceMid)
 router.post('/mid-callback', callbackMid)
 // router.post('/request-invoices', createInvoice)
 
