@@ -11,23 +11,20 @@
         "src": "/(.*)",
         "dest": "app.js",
         "methods": ["GET","POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
-        "headers": {
-            "source": "/(.*)",
-            "headers": [
-                {
-                    "key": "Access-Control-Allow-Origin",
-                    "value": "https://eshop-vini-sweethome.vercel.app"
-                },
-                {
-                    "key": "Access-Control-Allow-Credentials",
-                    "value": "true"
-                },
-                {
-                    "key": "Access-Control-Allow-Methods",
-                    "value": "GET,OPTIONS,PATCH,DELETE,POST,PUT"
-                }
-            ]
-        }
+        "headers": [
+            {
+                "key": "Access-Control-Allow-Origin",
+                "value": "https://eshop-vini-sweethome.vercel.app"
+            },
+            {
+                "key": "Access-Control-Allow-Credentials",
+                "value": "true"
+            },
+            {
+                "key": "Access-Control-Allow-Methods",
+                "value": "GET, OPTIONS, PATCH, DELETE, POST, PUT"
+            }
+        ]
     }
   ]
 }
