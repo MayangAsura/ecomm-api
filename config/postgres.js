@@ -18,10 +18,10 @@ const pool = new Pool({
   database: process.env.DB_DATABASE,
   password: process.env.DB_PASSWORD,
   port: process.env.DB_PORT,
-  // ssl: {
-  //   rejectUnauthorized: true,
-  //   ca: fs.readFileSync('./ca-cert-postgres-database/ca.pem').toString()
-  // }
+  ssl: {
+    rejectUnauthorized: true,
+    ca: fs.readFileSync('./ca-cert-postgres-database/ca.pem').toString()
+  }
 })
 
 module.exports = {pool}
