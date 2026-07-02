@@ -31,6 +31,7 @@ const citiesRouter = require('./routes/citiesRouter.js')
 const couponsRouter = require('./routes/couponsRouter.js')
 
 const db = require('./config/mongoose-connection')
+
 const { getProfile, updateProfile } = require('./controllers/customersController.js')
 const { verifyToken } = require('./utils/verifyToken.js')
 
