@@ -480,45 +480,52 @@ app.get('/', async (req, res) => {
   res.send("Hello from ecomm API")
 })
 
-// app.get('/test', async (req, res) => {
-//   const result = await pool.query("SELECT current_database()")
-//   res.send("database: " + result.rows[0].current_database)
-// })
-
-// app.use('/owners', ownersRouter)
-// app.use('/users', usersRouter)
-// app.use('/products', productsRouter)
-// app.use('/cart', cartsRouter)
-// app.use('/payments', paymentsRouter)
-// app.use('/auth', authRouter)
-// app.use('/histories', historyOrdersRouter)
-// app.use('/admin/auth', authRouter)
-// app.use('/count', countsRouter)
-// app.use('/orders', ordersRouter)
-// app.use('/coupons', couponsRouter)
-
-
-// app.use('/customers', customersRouter)
-// app.use('/categories', categoriesRouter)
-// app.use('/order-reports', orderReportsRouter)
-// app.use('/balance', balanceRouter)
-// app.use('/search', searchRouter)
-// app.use('/cities', citiesRouter)
-
-// app.use('/histories', historyOrdersRouter)
-
-// app.get('/accounts/profile', verifyToken, getProfile)
-// app.patch('/accouts/profile', verifyToken, updateProfile)
-
-// app.use((err, req, res, next) => {
-//     const errStatus = err.status || 500
-//     const errMessage = err.message || "Server error"
-
-//     return res.status(500).json({error: errStatus, message: errMessage, errorStack : err.stack})
-// })
-
-const PORT = process.env.PORT || 3030
-
-app.listen(PORT, () => {
-    console.log(`server running on port ${PORT}`)
+app.get('/test', async (req, res) => {
+  const result = await pool.query("SELECT current_database()")
+  res.send("database: " + result.rows[0].current_database)
 })
+
+app.use('/owners', ownersRouter)
+app.use('/users', usersRouter)
+app.use('/products', productsRouter)
+app.use('/cart', cartsRouter)
+app.use('/payments', paymentsRouter)
+app.use('/auth', authRouter)
+app.use('/histories', historyOrdersRouter)
+app.use('/admin/auth', authRouter)
+app.use('/count', countsRouter)
+app.use('/orders', ordersRouter)
+app.use('/coupons', couponsRouter)
+
+
+app.use('/customers', customersRouter)
+app.use('/categories', categoriesRouter)
+app.use('/order-reports', orderReportsRouter)
+app.use('/balance', balanceRouter)
+app.use('/search', searchRouter)
+app.use('/cities', citiesRouter)
+
+// app.use('/histories', historyOrdersRouter)
+
+app.get('/accounts/profile', verifyToken, getProfile)
+app.patch('/accouts/profile', verifyToken, updateProfile)
+
+app.use((err, req, res, next) => {
+    const errStatus = err.status || 500
+    const errMessage = err.message || "Server error"
+
+    return res.status(500).json({error: errStatus, message: errMessage, errorStack : err.stack})
+})
+
+module.exports = app
+
+
+if(require.main === module){
+  const PORT = process.env.PORT || 3030
+
+  app.listen(PORT, () => {
+      console.log(`server running on port ${PORT}`)
+  })
+
+
+}
